@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reporte de mantenimiento</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 24px;
+        background: #f7f7f7;
+      }
+      form {
+        background: #fff;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+      fieldset {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        padding: 16px;
+        border-radius: 8px;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      input[type="text"],
+      input[type="date"],
+      textarea {
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 8px;
+        font-size: 14px;
+      }
+      textarea {
+        min-height: 80px;
+      }
+      .question-title {
+        margin-bottom: 12px;
+        font-weight: 700;
+      }
+      .flash {
+        background: #ffe6e6;
+        border: 1px solid #ffb3b3;
+        color: #8a1c1c;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+      }
+      button {
+        background: #0069d9;
+        color: #fff;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+      }
+      button:hover {
+        background: #0053ad;
+      }
+    </style>
+  </head>
+  <body>
+    <form method="post" enctype="multipart/form-data">
+      <h1>Reporte de mantenimiento</h1>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash">
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <fieldset>
+        <legend>Datos generales</legend>
+        <label for="fecha">Fecha</label>
+        <input type="date" id="fecha" name="fecha" required />
+
+        <label for="area">Equipo/Área</label>
+        <input type="text" id="area" name="area" placeholder="Ej. AHU-1, Sala de máquinas" required />
+
+        <label for="tecnico">Técnico</label>
+        <input type="text" id="tecnico" name="tecnico" required />
+
+        <label for="template">Plantilla Word del cliente (.docx)</label>
+        <input type="file" id="template" name="template" accept=".docx" required />
+      </fieldset>
+
+      {% for question in questions %}
+        <fieldset>
+          <div class="question-title">{{ question.numero }}.- {{ question.texto }}</div>
+
+          <label for="comentario_{{ question.numero }}">Comentario</label>
+          <textarea id="comentario_{{ question.numero }}" name="comentario_{{ question.numero }}"></textarea>
+
+          <label for="fotos_{{ question.numero }}">Fotos</label>
+          <input
+            type="file"
+            id="fotos_{{ question.numero }}"
+            name="fotos_{{ question.numero }}"
+            accept="image/*"
+            multiple
+          />
+        </fieldset>
+      {% endfor %}
+
+      <fieldset>
+        <legend>Lecturas de parámetros</legend>
+        <label for="lectura_amperaje">Amperaje</label>
+        <input type="text" id="lectura_amperaje" name="lectura_amperaje" />
+
+        <label for="lectura_voltaje">Voltaje</label>
+        <input type="text" id="lectura_voltaje" name="lectura_voltaje" />
+
+        <label for="lectura_temp_inyeccion_agua">Temperatura de inyección agua helada/refrigerante</label>
+        <input type="text" id="lectura_temp_inyeccion_agua" name="lectura_temp_inyeccion_agua" />
+
+        <label for="lectura_temp_retorno_agua">Temperatura de retorno agua helada/refrigerante</label>
+        <input type="text" id="lectura_temp_retorno_agua" name="lectura_temp_retorno_agua" />
+
+        <label for="lectura_temp_inyeccion_aire">Temperatura de inyección de aire</label>
+        <input type="text" id="lectura_temp_inyeccion_aire" name="lectura_temp_inyeccion_aire" />
+
+        <label for="lectura_temp_retorno_aire">Temperatura de retorno de aire</label>
+        <input type="text" id="lectura_temp_retorno_aire" name="lectura_temp_retorno_aire" />
+
+        <label for="lectura_temp_area">Temperatura del área</label>
+        <input type="text" id="lectura_temp_area" name="lectura_temp_area" />
+      </fieldset>
+
+      <button type="submit">Generar Word</button>
+    </form>
+  </body>
+</html>
